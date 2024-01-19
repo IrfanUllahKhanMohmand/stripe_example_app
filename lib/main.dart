@@ -21,16 +21,18 @@ class App extends StatelessWidget {
     return DismissFocusOverlay(
       child: MaterialApp(
         theme: exampleAppTheme,
-        home: HomePage(),
-        navigatorObservers: [],
+        home: const HomePage(),
+        navigatorObservers: const [],
       ),
     );
   }
 }
 
 class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
   @override
-  _HomePageState createState() => _HomePageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
@@ -56,11 +58,11 @@ class _HomePageState extends State<HomePage> {
 }
 
 final exampleAppTheme = ThemeData(
-  colorScheme: ColorScheme.light(
+  colorScheme: const ColorScheme.light(
     primary: Color(0xff6058F7),
     secondary: Color(0xff6058F7),
   ),
   primaryColor: Colors.white,
   useMaterial3: false,
-  appBarTheme: AppBarTheme(elevation: 1),
+  appBarTheme: const AppBarTheme(elevation: 1),
 );

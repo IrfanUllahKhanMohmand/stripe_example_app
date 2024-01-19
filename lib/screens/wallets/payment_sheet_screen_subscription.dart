@@ -9,8 +9,10 @@ import 'package:stripe_example_app/widgets/example_scaffold.dart';
 import 'package:stripe_example_app/widgets/loading_button.dart';
 
 class ApplePayPaymentSheetScreen extends StatefulWidget {
+  const ApplePayPaymentSheetScreen({super.key});
+
   @override
-  _PaymentSheetScreenState createState() => _PaymentSheetScreenState();
+  State<ApplePayPaymentSheetScreen> createState() => _PaymentSheetScreenState();
 }
 
 class _PaymentSheetScreenState extends State<ApplePayPaymentSheetScreen> {
@@ -20,21 +22,21 @@ class _PaymentSheetScreenState extends State<ApplePayPaymentSheetScreen> {
   Widget build(BuildContext context) {
     return ExampleScaffold(
       title: 'Payment Sheet apple pay subscription',
-      tags: ['Single Step'],
+      tags: const ['Single Step'],
       children: [
         Stepper(
           controlsBuilder: emptyControlBuilder,
           currentStep: step,
           steps: [
             Step(
-              title: Text('Init payment'),
+              title: const Text('Init payment'),
               content: LoadingButton(
                 onPressed: initPaymentSheet,
                 text: 'Init payment sheet',
               ),
             ),
             Step(
-              title: Text('Confirm payment'),
+              title: const Text('Confirm payment'),
               content: LoadingButton(
                 onPressed: confirmPayment,
                 text: 'Pay now',
@@ -70,7 +72,7 @@ class _PaymentSheetScreenState extends State<ApplePayPaymentSheetScreen> {
       final data = await _createTestPaymentSheet();
 
       // create some billingdetails
-      final billingDetails = BillingDetails(
+      const billingDetails = BillingDetails(
         name: 'Flutter Stripe',
         email: 'email@stripe.com',
         phone: '+48888000888',
@@ -95,7 +97,7 @@ class _PaymentSheetScreenState extends State<ApplePayPaymentSheetScreen> {
           customerEphemeralKeySecret: data['ephemeralKey'],
           // Extra params
           primaryButtonLabel: 'Pay now',
-          applePay: PaymentSheetApplePay(
+          applePay: const PaymentSheetApplePay(
             merchantCountryCode: 'DE',
             cartItems: [
               ApplePayCartSummaryItem.recurring(
@@ -115,12 +117,12 @@ class _PaymentSheetScreenState extends State<ApplePayPaymentSheetScreen> {
               ),
             ),
           ),
-          googlePay: PaymentSheetGooglePay(
+          googlePay: const PaymentSheetGooglePay(
             merchantCountryCode: 'DE',
             testEnv: true,
           ),
           style: ThemeMode.dark,
-          appearance: PaymentSheetAppearance(
+          appearance: const PaymentSheetAppearance(
             colors: PaymentSheetAppearanceColors(
               background: Colors.lightBlue,
               primary: Colors.blue,
@@ -148,9 +150,11 @@ class _PaymentSheetScreenState extends State<ApplePayPaymentSheetScreen> {
         step = 1;
       });
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: $e')),
-      );
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e')),
+        );
+      }
       rethrow;
     }
   }
@@ -164,24 +168,28 @@ class _PaymentSheetScreenState extends State<ApplePayPaymentSheetScreen> {
         step = 0;
       });
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Payment succesfully completed'),
-        ),
-      );
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Payment succesfully completed'),
+          ),
+        );
+      }
     } on Exception catch (e) {
-      if (e is StripeException) {
+      if (e is StripeException && context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Error from Stripe: ${e.error.localizedMessage}'),
           ),
         );
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Unforeseen error: ${e}'),
-          ),
-        );
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Unforeseen error: $e'),
+            ),
+          );
+        }
       }
     }
   }

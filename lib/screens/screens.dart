@@ -53,7 +53,7 @@ class ExampleSection extends StatelessWidget {
     return ExpansionTile(
       backgroundColor: Theme.of(context).primaryColor.withOpacity(0.2),
       initiallyExpanded: expanded,
-      childrenPadding: EdgeInsets.only(left: 20),
+      childrenPadding: const EdgeInsets.only(left: 20),
       title: Text(title),
       children:
           ListTile.divideTiles(tiles: children, context: context).toList(),
@@ -69,7 +69,8 @@ class Example extends StatelessWidget {
 
   final WidgetBuilder builder;
 
-  Example({
+  const Example({
+    super.key,
     required this.title,
     required this.builder,
     this.style,
@@ -85,10 +86,10 @@ class Example extends StatelessWidget {
         Navigator.push(context, route);
       },
       title: Text(title, style: style),
-      leading: this.leading,
+      leading: leading,
       trailing: Row(mainAxisSize: MainAxisSize.min, children: [
         PlatformIcons(supported: platformsSupported),
-        Icon(Icons.chevron_right_rounded),
+        const Icon(Icons.chevron_right_rounded),
       ]),
     );
   }
@@ -98,37 +99,46 @@ class Example extends StatelessWidget {
   static List<Widget> screens = [
     ExampleSection(
       title: 'Payment Sheet',
+      expanded: true,
       children: [
         Example(
           title: 'Single Step',
-          builder: (context) => PaymentSheetScreen(),
-          platformsSupported: [DevicePlatform.android, DevicePlatform.ios],
+          builder: (context) => const PaymentSheetScreen(),
+          platformsSupported: const [
+            DevicePlatform.android,
+            DevicePlatform.ios
+          ],
         ),
         Example(
           title: 'Single Step (deffered payment)',
-          builder: (context) => PaymentSheetDefferedScreen(),
-          platformsSupported: [DevicePlatform.android, DevicePlatform.ios],
+          builder: (context) => const PaymentSheetDefferedScreen(),
+          platformsSupported: const [
+            DevicePlatform.android,
+            DevicePlatform.ios
+          ],
         ),
         Example(
           title: 'Custom Flow',
-          builder: (context) => PaymentSheetScreenWithCustomFlow(),
-          platformsSupported: [DevicePlatform.android, DevicePlatform.ios],
+          builder: (context) => const PaymentSheetScreenWithCustomFlow(),
+          platformsSupported: const [
+            DevicePlatform.android,
+            DevicePlatform.ios
+          ],
         ),
         Example(
           title: 'Web Payment Element',
-          builder: (c) => PaymentElementExample(),
-          platformsSupported: [
+          builder: (c) => const PaymentElementExample(),
+          platformsSupported: const [
             DevicePlatform.web,
           ],
         ),
       ],
-      expanded: true,
     ),
     ExampleSection(title: 'Customer sheet', children: [
       Example(
         title: 'Customer sheet',
-        builder: (context) => CustomerSheetScreen(),
-        platformsSupported: [DevicePlatform.android, DevicePlatform.ios],
+        builder: (context) => const CustomerSheetScreen(),
+        platformsSupported: const [DevicePlatform.android, DevicePlatform.ios],
       ),
     ]),
     ExampleSection(
@@ -136,26 +146,32 @@ class Example extends StatelessWidget {
       children: [
         Example(
           title: 'Simple - Using webhooks',
-          style: TextStyle(fontWeight: FontWeight.w600),
-          builder: (c) => WebhookPaymentScreen(),
+          style: const TextStyle(fontWeight: FontWeight.w600),
+          builder: (c) => const WebhookPaymentScreen(),
         ),
         Example(
           title: 'Without webhooks',
-          builder: (c) => NoWebhookPaymentScreen(),
+          builder: (c) => const NoWebhookPaymentScreen(),
         ),
         Example(
           title: 'Card Field themes',
-          builder: (c) => ThemeCardExample(),
+          builder: (c) => const ThemeCardExample(),
         ),
         Example(
           title: 'Card Form',
-          builder: (c) => NoWebhookPaymentCardFormScreen(),
-          platformsSupported: [DevicePlatform.android, DevicePlatform.ios],
+          builder: (c) => const NoWebhookPaymentCardFormScreen(),
+          platformsSupported: const [
+            DevicePlatform.android,
+            DevicePlatform.ios
+          ],
         ),
         Example(
           title: 'Flutter UI (not PCI compliant)',
-          builder: (c) => CustomCardPaymentScreen(),
-          platformsSupported: [DevicePlatform.android, DevicePlatform.ios],
+          builder: (c) => const CustomCardPaymentScreen(),
+          platformsSupported: const [
+            DevicePlatform.android,
+            DevicePlatform.ios
+          ],
         ),
       ],
     ),
@@ -168,8 +184,8 @@ class Example extends StatelessWidget {
             'assets/apple_pay.png',
             width: 48,
           ),
-          builder: (c) => ApplePayScreen(),
-          platformsSupported: [DevicePlatform.ios],
+          builder: (c) => const ApplePayScreen(),
+          platformsSupported: const [DevicePlatform.ios],
         ),
         Example(
           title: 'Apple Pay - Pay Plugin',
@@ -177,8 +193,8 @@ class Example extends StatelessWidget {
             'assets/apple_pay.png',
             width: 48,
           ),
-          builder: (c) => ApplePayExternalPluginScreen(),
-          platformsSupported: [DevicePlatform.ios],
+          builder: (c) => const ApplePayExternalPluginScreen(),
+          platformsSupported: const [DevicePlatform.ios],
         ),
         Example(
           title: 'Apple Pay - Create payment method',
@@ -186,8 +202,8 @@ class Example extends StatelessWidget {
             'assets/apple_pay.png',
             width: 48,
           ),
-          builder: (c) => ApplePayCreatePaymentMethodScreen(),
-          platformsSupported: [DevicePlatform.ios],
+          builder: (c) => const ApplePayCreatePaymentMethodScreen(),
+          platformsSupported: const [DevicePlatform.ios],
         ),
         Example(
           title: 'Apple Pay - Paymentsheet subscription',
@@ -195,8 +211,8 @@ class Example extends StatelessWidget {
             'assets/apple_pay.png',
             width: 48,
           ),
-          builder: (c) => ApplePayPaymentSheetScreen(),
-          platformsSupported: [DevicePlatform.ios],
+          builder: (c) => const ApplePayPaymentSheetScreen(),
+          platformsSupported: const [DevicePlatform.ios],
         ),
         Example(
           title: 'Open Apple Pay setup',
@@ -204,8 +220,8 @@ class Example extends StatelessWidget {
             'assets/apple_pay.png',
             width: 48,
           ),
-          builder: (c) => OpenApplePaySetup(),
-          platformsSupported: [DevicePlatform.ios],
+          builder: (c) => const OpenApplePaySetup(),
+          platformsSupported: const [DevicePlatform.ios],
         ),
         Example(
           leading: Image.asset(
@@ -213,8 +229,8 @@ class Example extends StatelessWidget {
             width: 48,
           ),
           title: 'Google Pay',
-          builder: (c) => GooglePayStripeScreen(),
-          platformsSupported: [DevicePlatform.android],
+          builder: (c) => const GooglePayStripeScreen(),
+          platformsSupported: const [DevicePlatform.android],
         ),
         Example(
           leading: Image.asset(
@@ -222,8 +238,8 @@ class Example extends StatelessWidget {
             width: 48,
           ),
           title: 'Google Pay - Pay Plugin',
-          builder: (c) => GooglePayScreen(),
-          platformsSupported: [DevicePlatform.android],
+          builder: (c) => const GooglePayScreen(),
+          platformsSupported: const [DevicePlatform.android],
         ),
       ],
     ),
@@ -234,13 +250,13 @@ class Example extends StatelessWidget {
           'assets/alipay.png',
           width: 48,
         ),
-        builder: (context) => AliPayScreen(),
-        platformsSupported: [DevicePlatform.android, DevicePlatform.ios],
+        builder: (context) => const AliPayScreen(),
+        platformsSupported: const [DevicePlatform.android, DevicePlatform.ios],
       ),
       Example(
         title: 'Cash app Pay',
-        builder: (context) => CashAppScreen(),
-        platformsSupported: [DevicePlatform.android, DevicePlatform.ios],
+        builder: (context) => const CashAppScreen(),
+        platformsSupported: const [DevicePlatform.android, DevicePlatform.ios],
       ),
       Example(
         title: 'Ideal',
@@ -248,18 +264,18 @@ class Example extends StatelessWidget {
           'assets/ideal_pay.png',
           width: 48,
         ),
-        builder: (context) => IdealScreen(),
+        builder: (context) => const IdealScreen(),
       ),
       Example(
         title: 'Sofort',
-        leading: SizedBox(),
-        builder: (context) => SofortScreen(),
-        platformsSupported: [DevicePlatform.android, DevicePlatform.ios],
+        leading: const SizedBox(),
+        builder: (context) => const SofortScreen(),
+        platformsSupported: const [DevicePlatform.android, DevicePlatform.ios],
       ),
       Example(
         title: 'Aubecs',
-        builder: (context) => AubecsExample(),
-        platformsSupported: [DevicePlatform.android, DevicePlatform.ios],
+        builder: (context) => const AubecsExample(),
+        platformsSupported: const [DevicePlatform.android, DevicePlatform.ios],
       ),
       Example(
         title: 'Fpx',
@@ -267,8 +283,8 @@ class Example extends StatelessWidget {
           'assets/fpx.png',
           width: 48,
         ),
-        builder: (contex) => FpxScreen(),
-        platformsSupported: [DevicePlatform.android, DevicePlatform.ios],
+        builder: (contex) => const FpxScreen(),
+        platformsSupported: const [DevicePlatform.android, DevicePlatform.ios],
       ),
       Example(
         title: 'Grab pay',
@@ -276,8 +292,8 @@ class Example extends StatelessWidget {
           'assets/grab_pay.png',
           width: 48,
         ),
-        builder: (contex) => GrabPayScreen(),
-        platformsSupported: [DevicePlatform.android, DevicePlatform.ios],
+        builder: (contex) => const GrabPayScreen(),
+        platformsSupported: const [DevicePlatform.android, DevicePlatform.ios],
       ),
       Example(
         title: 'Klarna',
@@ -285,8 +301,8 @@ class Example extends StatelessWidget {
           'assets/klarna.jpg',
           width: 48,
         ),
-        builder: (contex) => KlarnaScreen(),
-        platformsSupported: [DevicePlatform.android, DevicePlatform.ios],
+        builder: (contex) => const KlarnaScreen(),
+        platformsSupported: const [DevicePlatform.android, DevicePlatform.ios],
       ),
       Example(
         title: 'PayPal',
@@ -294,8 +310,8 @@ class Example extends StatelessWidget {
           'assets/paypal.png',
           width: 48,
         ),
-        builder: (contex) => PayPalScreen(),
-        platformsSupported: [DevicePlatform.android, DevicePlatform.ios],
+        builder: (contex) => const PayPalScreen(),
+        platformsSupported: const [DevicePlatform.android, DevicePlatform.ios],
       ),
       Example(
         title: 'RevolutPay',
@@ -303,15 +319,14 @@ class Example extends StatelessWidget {
           'assets/revolut.png',
           width: 48,
         ),
-        builder: (context) => RevolutPayScreen(),
-        platformsSupported: [DevicePlatform.android, DevicePlatform.ios],
+        builder: (context) => const RevolutPayScreen(),
+        platformsSupported: const [DevicePlatform.android, DevicePlatform.ios],
       ),
       Example(
         title: 'Us bank accounts (ACH)',
-        builder: (contex) => UsBankAccountScreen(),
-        platformsSupported: [DevicePlatform.android, DevicePlatform.ios],
+        builder: (contex) => const UsBankAccountScreen(),
+        platformsSupported: const [DevicePlatform.android, DevicePlatform.ios],
       ),
-      // TODO: uncomment when we can re-enable wechat pay
       // Example(
       //   title: 'WeChat Pay',
       //   leading: Image.asset(
@@ -326,8 +341,8 @@ class Example extends StatelessWidget {
       children: [
         Example(
           title: 'Financial connection sessions',
-          builder: (_) => FinancialConnectionsScreen(),
-          platformsSupported: [
+          builder: (_) => const FinancialConnectionsScreen(),
+          platformsSupported: const [
             DevicePlatform.android,
             DevicePlatform.ios,
           ],
@@ -337,17 +352,17 @@ class Example extends StatelessWidget {
     ExampleSection(title: 'Others', children: [
       Example(
         title: 'Setup Future Payment',
-        builder: (c) => SetupFuturePaymentScreen(),
+        builder: (c) => const SetupFuturePaymentScreen(),
       ),
       Example(
         title: 'Re-collect CVC',
-        builder: (c) => CVCReCollectionScreen(),
-        platformsSupported: [DevicePlatform.android, DevicePlatform.ios],
+        builder: (c) => const CVCReCollectionScreen(),
+        platformsSupported: const [DevicePlatform.android, DevicePlatform.ios],
       ),
       Example(
         title: 'Create token for card (legacy)',
-        builder: (context) => LegacyTokenCardScreen(),
-        platformsSupported: [
+        builder: (context) => const LegacyTokenCardScreen(),
+        platformsSupported: const [
           DevicePlatform.android,
           DevicePlatform.ios,
           DevicePlatform.web,
@@ -355,8 +370,8 @@ class Example extends StatelessWidget {
       ),
       Example(
         title: 'Create token for bank (legacy)',
-        builder: (context) => LegacyTokenBankScreen(),
-        platformsSupported: [
+        builder: (context) => const LegacyTokenBankScreen(),
+        platformsSupported: const [
           DevicePlatform.android,
           DevicePlatform.ios,
           DevicePlatform.web,
@@ -365,8 +380,8 @@ class Example extends StatelessWidget {
     ]),
     Example(
       title: 'Checkout',
-      builder: (c) => CheckoutScreenExample(),
-      platformsSupported: [
+      builder: (c) => const CheckoutScreenExample(),
+      platformsSupported: const [
         DevicePlatform.android,
         DevicePlatform.ios,
         DevicePlatform.web

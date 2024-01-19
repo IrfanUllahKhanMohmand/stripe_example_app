@@ -61,7 +61,7 @@ class _PayPalScreenState extends State<PayPalScreen> {
       final billingDetails = BillingDetails(
         // email is mandatory
         email: email,
-        address: Address(
+        address: const Address(
           city: 'Stockholm',
           country: 'SV',
           line1: 'Kungsgatan 1',
@@ -78,24 +78,28 @@ class _PayPalScreenState extends State<PayPalScreen> {
         ),
       );
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Payment succesfully completed'),
-        ),
-      );
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Payment succesfully completed'),
+          ),
+        );
+      }
     } on Exception catch (e) {
-      if (e is StripeException) {
+      if (e is StripeException && context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Error from Stripe: ${e.error.localizedMessage}'),
           ),
         );
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Unforeseen error: ${e}'),
-          ),
-        );
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Unforeseen error: $e'),
+            ),
+          );
+        }
       }
     }
   }
@@ -104,17 +108,17 @@ class _PayPalScreenState extends State<PayPalScreen> {
   Widget build(BuildContext context) {
     return ExampleScaffold(
       title: 'PayPal',
-      tags: ['Payment method'],
-      padding: EdgeInsets.all(16),
+      tags: const ['Payment method'],
+      padding: const EdgeInsets.all(16),
       children: [
         TextField(
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             border: OutlineInputBorder(),
             labelText: 'Email',
           ),
           controller: _emailController,
         ),
-        SizedBox(
+        const SizedBox(
           height: 15,
         ),
         LoadingButton(

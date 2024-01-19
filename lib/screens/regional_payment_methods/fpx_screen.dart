@@ -41,31 +41,35 @@ class FpxScreen extends StatelessWidget {
     try {
       await Stripe.instance.confirmPayment(
         paymentIntentClientSecret: clientSecret,
-        data: PaymentMethodParams.fpx(
+        data: const PaymentMethodParams.fpx(
           paymentMethodData: PaymentMethodDataFpx(
             testOfflineBank: false,
           ),
         ),
       );
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Payment succesfully completed'),
-        ),
-      );
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Payment succesfully completed'),
+          ),
+        );
+      }
     } on Exception catch (e) {
-      if (e is StripeException) {
+      if (e is StripeException && context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Error from Stripe: ${e.error.localizedMessage}'),
           ),
         );
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Unforeseen error: ${e}'),
-          ),
-        );
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Unforeseen error: $e'),
+            ),
+          );
+        }
       }
     }
   }
@@ -74,8 +78,8 @@ class FpxScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ExampleScaffold(
       title: 'FPX',
-      tags: ['Payment method'],
-      padding: EdgeInsets.all(16),
+      tags: const ['Payment method'],
+      padding: const EdgeInsets.all(16),
       children: [
         LoadingButton(
           onPressed: () async {

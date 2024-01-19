@@ -8,26 +8,28 @@ import 'package:stripe_example_app/widgets/example_scaffold.dart';
 import '../../config.dart';
 
 class ApplePayScreen extends StatefulWidget {
+  const ApplePayScreen({super.key});
+
   @override
-  _ApplePayScreenState createState() => _ApplePayScreenState();
+  State<ApplePayScreen> createState() => _ApplePayScreenState();
 }
 
 class _ApplePayScreenState extends State<ApplePayScreen> {
   final items = [
-    ApplePayCartSummaryItem.immediate(
+    const ApplePayCartSummaryItem.immediate(
       label: 'Product Test',
       amount: '0.01',
     )
   ];
 
   final shippingMethods = [
-    ApplePayShippingMethod(
+    const ApplePayShippingMethod(
       identifier: 'free',
       detail: 'Arrives by July 2',
       label: 'Free Shipping',
       amount: '0.0',
     ),
-    ApplePayShippingMethod(
+    const ApplePayShippingMethod(
       identifier: 'standard',
       detail: 'Arrives by June 29',
       label: 'Standard Shipping',
@@ -55,8 +57,8 @@ class _ApplePayScreenState extends State<ApplePayScreen> {
   Widget build(BuildContext context) {
     return ExampleScaffold(
       title: 'Apple Pay',
-      tags: ['iOS'],
-      padding: EdgeInsets.all(16),
+      tags: const ['iOS'],
+      padding: const EdgeInsets.all(16),
       children: [
         if (Stripe.instance.isPlatformPaySupportedListenable.value)
           PlatformPayButton(
@@ -96,7 +98,7 @@ class _ApplePayScreenState extends State<ApplePayScreen> {
               /// Provide a URL to your web service that will provide the order details
               ///
               await Stripe.instance.configurePlatformOrderTracking(
-                  orderDetails: PlatformPayOrderDetails.applePay(
+                  orderDetails: const PlatformPayOrderDetails.applePay(
                 orderTypeIdentifier: 'orderTypeIdentifier',
                 orderIdentifier: 'https://your-web-service.com/v1/orders/',
                 webServiceUrl: 'webServiceURL',
@@ -111,7 +113,7 @@ class _ApplePayScreenState extends State<ApplePayScreen> {
             ),
           )
         else
-          Text('Apple Pay is not available in this device'),
+          const Text('Apple Pay is not available in this device'),
       ],
     );
   }
@@ -144,14 +146,18 @@ class _ApplePayScreenState extends State<ApplePayScreen> {
               couponCode: 'Coupon'),
         ),
       );
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text('Apple Pay payment succesfully completed')),
-      );
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              content: Text('Apple Pay payment succesfully completed')),
+        );
+      }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: $e')),
-      );
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e')),
+        );
+      }
       rethrow;
     }
   }

@@ -8,8 +8,11 @@ import 'package:stripe_example_app/widgets/example_scaffold.dart';
 import 'package:stripe_example_app/widgets/loading_button.dart';
 
 class PaymentSheetScreenWithCustomFlow extends StatefulWidget {
+  const PaymentSheetScreenWithCustomFlow({super.key});
+
   @override
-  _PaymentSheetScreenState createState() => _PaymentSheetScreenState();
+  State<PaymentSheetScreenWithCustomFlow> createState() =>
+      _PaymentSheetScreenState();
 }
 
 class _PaymentSheetScreenState extends State<PaymentSheetScreenWithCustomFlow> {
@@ -19,28 +22,28 @@ class _PaymentSheetScreenState extends State<PaymentSheetScreenWithCustomFlow> {
   Widget build(BuildContext context) {
     return ExampleScaffold(
       title: 'Payment Sheet',
-      tags: ['Custom Flow'],
+      tags: const ['Custom Flow'],
       children: [
         Stepper(
           controlsBuilder: emptyControlBuilder,
           currentStep: step,
           steps: [
             Step(
-              title: Text('Init payment'),
+              title: const Text('Init payment'),
               content: LoadingButton(
                 onPressed: initPaymentSheet,
                 text: 'Init payment sheet',
               ),
             ),
             Step(
-              title: Text('Select payment method'),
+              title: const Text('Select payment method'),
               content: LoadingButton(
                 onPressed: presentPaymentSheet,
                 text: 'Select payment method',
               ),
             ),
             Step(
-              title: Text('Confirm payment'),
+              title: const Text('Confirm payment'),
               content: LoadingButton(
                 onPressed: confirmPayment,
                 text: 'Pay now',
@@ -69,10 +72,10 @@ class _PaymentSheetScreenState extends State<PaymentSheetScreenWithCustomFlow> {
           customerEphemeralKeySecret: data['ephemeralKey'],
           customerId: data['customer'],
           // Extra options
-          applePay: PaymentSheetApplePay(
+          applePay: const PaymentSheetApplePay(
             merchantCountryCode: 'DE',
           ),
-          googlePay: PaymentSheetGooglePay(merchantCountryCode: 'DE'),
+          googlePay: const PaymentSheetGooglePay(merchantCountryCode: 'DE'),
           style: ThemeMode.dark,
         ),
       );
@@ -80,9 +83,11 @@ class _PaymentSheetScreenState extends State<PaymentSheetScreenWithCustomFlow> {
         step = 1;
       });
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: $e')),
-      );
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e')),
+        );
+      }
       rethrow;
     }
   }
@@ -96,24 +101,28 @@ class _PaymentSheetScreenState extends State<PaymentSheetScreenWithCustomFlow> {
         step = 2;
       });
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Payment option selected'),
-        ),
-      );
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Payment option selected'),
+          ),
+        );
+      }
     } on Exception catch (e) {
-      if (e is StripeException) {
+      if (e is StripeException && context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Error from Stripe: ${e.error.localizedMessage}'),
           ),
         );
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Unforeseen error: ${e}'),
-          ),
-        );
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Unforeseen error: $e'),
+            ),
+          );
+        }
       }
     }
   }
@@ -127,24 +136,28 @@ class _PaymentSheetScreenState extends State<PaymentSheetScreenWithCustomFlow> {
         step = 0;
       });
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Payment succesfully completed'),
-        ),
-      );
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Payment succesfully completed'),
+          ),
+        );
+      }
     } on Exception catch (e) {
-      if (e is StripeException) {
+      if (e is StripeException && context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Error from Stripe: ${e.error.localizedMessage}'),
           ),
         );
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Unforeseen error: ${e}'),
-          ),
-        );
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Unforeseen error: $e'),
+            ),
+          );
+        }
       }
     }
   }
@@ -170,4 +183,5 @@ class _PaymentSheetScreenState extends State<PaymentSheetScreenWithCustomFlow> {
   }
 }
 
+// ignore: prefer_function_declarations_over_variables
 final ControlsWidgetBuilder emptyControlBuilder = (_, __) => Container();

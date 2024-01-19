@@ -10,8 +10,10 @@ import 'package:stripe_example_app/widgets/loading_button.dart';
 import 'package:stripe_example_app/widgets/response_card.dart';
 
 class WebhookPaymentScreen extends StatefulWidget {
+  const WebhookPaymentScreen({super.key});
+
   @override
-  _WebhookPaymentScreenState createState() => _WebhookPaymentScreenState();
+  State<WebhookPaymentScreen> createState() => _WebhookPaymentScreenState();
 }
 
 class _WebhookPaymentScreenState extends State<WebhookPaymentScreen> {
@@ -23,19 +25,20 @@ class _WebhookPaymentScreenState extends State<WebhookPaymentScreen> {
   Widget build(BuildContext context) {
     return ExampleScaffold(
       title: 'Card Field',
-      tags: ['With Webhook'],
-      padding: EdgeInsets.symmetric(horizontal: 16),
+      tags: const ['With Webhook'],
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       children: [
         TextFormField(
           initialValue: _email,
-          decoration: InputDecoration(hintText: 'Email', labelText: 'Email'),
+          decoration:
+              const InputDecoration(hintText: 'Email', labelText: 'Email'),
           onChanged: (value) {
             setState(() {
               _email = value;
             });
           },
         ),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         CardField(
           enablePostalCode: true,
           countryCode: 'US',
@@ -46,7 +49,7 @@ class _WebhookPaymentScreenState extends State<WebhookPaymentScreen> {
             });
           },
         ),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         CheckboxListTile(
           value: _saveCard,
           onChanged: (value) {
@@ -54,13 +57,13 @@ class _WebhookPaymentScreenState extends State<WebhookPaymentScreen> {
               _saveCard = value;
             });
           },
-          title: Text('Save card during payment'),
+          title: const Text('Save card during payment'),
         ),
         LoadingButton(
           onPressed: _card?.complete == true ? _handlePayPress : null,
           text: 'Pay',
         ),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         if (_card != null)
           ResponseCard(
             response: _card!.toJson().toPrettyString(),
@@ -81,7 +84,7 @@ class _WebhookPaymentScreenState extends State<WebhookPaymentScreen> {
     final billingDetails = BillingDetails(
       email: _email,
       phone: '+48888000888',
-      address: Address(
+      address: const Address(
         city: 'Houston',
         country: 'US',
         line1: '1459  Circle Drive',
@@ -107,8 +110,10 @@ class _WebhookPaymentScreenState extends State<WebhookPaymentScreen> {
       ),
     );
 
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Success!: The payment was confirmed successfully!')));
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Success!: The payment was confirmed successfully!')));
+    }
   }
 
   Future<Map<String, dynamic>> fetchPaymentIntentClientSecret() async {

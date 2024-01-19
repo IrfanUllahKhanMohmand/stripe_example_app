@@ -50,13 +50,15 @@ class IdealScreen extends StatelessWidget {
         ),
       );
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Payment succesfully completed'),
-        ),
-      );
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Payment succesfully completed'),
+          ),
+        );
+      }
     } on Exception catch (e) {
-      if (e is StripeException) {
+      if (e is StripeException && context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
@@ -64,11 +66,13 @@ class IdealScreen extends StatelessWidget {
           ),
         );
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Unforeseen error: ${e}'),
-          ),
-        );
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Unforeseen error: $e'),
+            ),
+          );
+        }
       }
     }
   }
@@ -77,8 +81,8 @@ class IdealScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ExampleScaffold(
       title: 'Ideal',
-      tags: ['Payment method'],
-      padding: EdgeInsets.all(16),
+      tags: const ['Payment method'],
+      padding: const EdgeInsets.all(16),
       children: [
         LoadingButton(
           onPressed: () async {

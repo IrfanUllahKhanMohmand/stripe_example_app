@@ -4,8 +4,11 @@ import 'package:stripe_example_app/widgets/example_scaffold.dart';
 import 'package:stripe_example_app/widgets/response_card.dart';
 
 class ApplePayCreatePaymentMethodScreen extends StatefulWidget {
+  const ApplePayCreatePaymentMethodScreen({super.key});
+
   @override
-  _ApplePayScreenState createState() => _ApplePayScreenState();
+  State<ApplePayCreatePaymentMethodScreen> createState() =>
+      _ApplePayScreenState();
 }
 
 class _ApplePayScreenState extends State<ApplePayCreatePaymentMethodScreen> {
@@ -30,16 +33,16 @@ class _ApplePayScreenState extends State<ApplePayCreatePaymentMethodScreen> {
   Widget build(BuildContext context) {
     return ExampleScaffold(
       title: 'Apple Pay',
-      tags: ['iOS'],
-      padding: EdgeInsets.all(16),
+      tags: const ['iOS'],
+      padding: const EdgeInsets.all(16),
       children: [
         if (Stripe.instance.isPlatformPaySupportedListenable.value)
           PlatformPayButton(
             onPressed: _handlePayPress,
           )
         else
-          Text('Apple Pay is not available in this device'),
-        SizedBox(
+          const Text('Apple Pay is not available in this device'),
+        const SizedBox(
           height: 50,
         ),
         ResponseCard(response: response?.toString() ?? ''),
@@ -51,7 +54,7 @@ class _ApplePayScreenState extends State<ApplePayCreatePaymentMethodScreen> {
     // 1. create payment method
 
     final paymentMethod = await Stripe.instance.createPlatformPayPaymentMethod(
-      params: PlatformPayPaymentMethodParams.applePay(
+      params: const PlatformPayPaymentMethodParams.applePay(
         applePayParams: ApplePayParams(
           cartItems: [
             ApplePayCartSummaryItem.immediate(
@@ -86,8 +89,10 @@ class _ApplePayScreenState extends State<ApplePayCreatePaymentMethodScreen> {
       response = paymentMethod;
     });
 
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(
-            'Success!: The payment method with id: ${paymentMethod.id} was created successfully,')));
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(
+              'Success!: The payment method with id: ${paymentMethod.id} was created successfully,')));
+    }
   }
 }

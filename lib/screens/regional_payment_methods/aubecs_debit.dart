@@ -41,8 +41,8 @@ class _AubecsExampleState extends State<AubecsExample> {
   Widget build(BuildContext context) {
     return ExampleScaffold(
       title: 'Aubecs',
-      tags: ['Aubecs'],
-      padding: EdgeInsets.symmetric(horizontal: 16),
+      tags: const ['Aubecs'],
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       children: [
         AubecsFormField(
           controller: _controller,
@@ -105,24 +105,28 @@ class _AubecsExampleState extends State<AubecsExample> {
         ),
       );
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Payment succesfully completed'),
-        ),
-      );
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Payment succesfully completed'),
+          ),
+        );
+      }
     } on Exception catch (e) {
-      if (e is StripeException) {
+      if (e is StripeException && context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Error from Stripe: ${e.error.localizedMessage}'),
           ),
         );
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Unforeseen error: ${e}'),
-          ),
-        );
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Unforeseen error: $e'),
+            ),
+          );
+        }
       }
     }
   }

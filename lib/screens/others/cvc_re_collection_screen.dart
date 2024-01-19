@@ -9,8 +9,10 @@ import 'package:stripe_example_app/widgets/loading_button.dart';
 import '../../config.dart';
 
 class CVCReCollectionScreen extends StatefulWidget {
+  const CVCReCollectionScreen({super.key});
+
   @override
-  _CVCReCollectionScreenState createState() => _CVCReCollectionScreenState();
+  State<CVCReCollectionScreen> createState() => _CVCReCollectionScreenState();
 }
 
 class _CVCReCollectionScreenState extends State<CVCReCollectionScreen> {
@@ -21,33 +23,34 @@ class _CVCReCollectionScreenState extends State<CVCReCollectionScreen> {
   Widget build(BuildContext context) {
     return ExampleScaffold(
       title: 'Re-collect CVC',
-      tags: ['Card Payment'],
-      padding: EdgeInsets.all(16),
+      tags: const ['Card Payment'],
+      padding: const EdgeInsets.all(16),
       children: [
         TextFormField(
           initialValue: _email,
-          decoration: InputDecoration(hintText: 'Email', labelText: 'Email'),
+          decoration:
+              const InputDecoration(hintText: 'Email', labelText: 'Email'),
           onChanged: (value) {
             setState(() {
               _email = value;
             });
           },
         ),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         TextField(
-          decoration: InputDecoration(hintText: 'CVC', labelText: 'CVC'),
+          decoration: const InputDecoration(hintText: 'CVC', labelText: 'CVC'),
           onChanged: (value) {
             setState(() {
               _cvc = value;
             });
           },
         ),
-        SizedBox(height: 42),
+        const SizedBox(height: 42),
         LoadingButton(
           onPressed: _payAsynchronously,
           text: 'Pay with Webhook',
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         LoadingButton(
           onPressed: _paySynchronously,
           text: 'Pay Synchronously',
@@ -64,14 +67,16 @@ class _CVCReCollectionScreenState extends State<CVCReCollectionScreen> {
     // 1. fetch Intent Client Secret from backend
     final paymentMethod = await _fetchPaymentIntentWithPaymentMethod();
 
-    if (paymentMethod['error'] != null) {
+    if (paymentMethod['error'] != null && context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Error code: ${paymentMethod['error']}')));
       return;
     }
 
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Success!: The payment was confirmed successfully!')));
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Success!: The payment was confirmed successfully!')));
+    }
   }
 
   Future<void> _paySynchronously() async {
@@ -83,11 +88,11 @@ class _CVCReCollectionScreenState extends State<CVCReCollectionScreen> {
       email: _email,
     );
     log('paymentIntent $paymentIntent');
-    if (paymentIntent['error'] != null) {
+    if (paymentIntent['error'] != null && context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Error code: ${paymentIntent['error']}')));
-    } else if (paymentIntent['succeeded'] == true) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+    } else if (paymentIntent['succeeded'] == true && context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('Success!: The payment was confirmed successfully!')));
     } else {
       // Handle other statuses accordingly

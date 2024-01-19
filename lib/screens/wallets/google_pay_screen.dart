@@ -18,8 +18,10 @@ const _paymentItems = [
 ];
 
 class GooglePayScreen extends StatefulWidget {
+  const GooglePayScreen({super.key});
+
   @override
-  _GooglePayScreenState createState() => _GooglePayScreenState();
+  State<GooglePayScreen> createState() => _GooglePayScreenState();
 }
 
 class _GooglePayScreenState extends State<GooglePayScreen> {
@@ -41,8 +43,8 @@ class _GooglePayScreenState extends State<GooglePayScreen> {
   Widget build(BuildContext context) {
     return ExampleScaffold(
       title: 'Google Pay',
-      padding: EdgeInsets.all(16),
-      tags: ['Android', 'Pay plugin'],
+      padding: const EdgeInsets.all(16),
+      tags: const ['Android', 'Pay plugin'],
       children: [
         pay.GooglePayButton(
           paymentConfiguration: pay.PaymentConfiguration.fromJsonString(
@@ -55,7 +57,8 @@ class _GooglePayScreenState extends State<GooglePayScreen> {
             child: CircularProgressIndicator(),
           ),
           onPressed: () async {},
-          childOnError: Text('Google Pay is not available in this device'),
+          childOnError:
+              const Text('Google Pay is not available in this device'),
           onError: (e) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
@@ -82,7 +85,7 @@ class _GooglePayScreenState extends State<GooglePayScreen> {
 
       final params = PaymentMethodParams.cardFromToken(
         paymentMethodData: PaymentMethodDataCardFromToken(
-          token: tokenJson['id'], // TODO extract the actual token
+          token: tokenJson['id'],
         ),
       );
 
@@ -92,14 +95,18 @@ class _GooglePayScreenState extends State<GooglePayScreen> {
         data: params,
       );
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text('Google Pay payment succesfully completed')),
-      );
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              content: Text('Google Pay payment succesfully completed')),
+        );
+      }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: $e')),
-      );
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e')),
+        );
+      }
     }
   }
 
@@ -121,7 +128,7 @@ class _GooglePayScreenState extends State<GooglePayScreen> {
   }
 }
 
-final _paymentProfile = """{
+const _paymentProfile = """{
   "provider": "google_pay",
   "data": {
     "environment": "TEST",

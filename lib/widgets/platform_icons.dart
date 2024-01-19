@@ -6,8 +6,9 @@ enum DevicePlatform { ios, android, web }
 
 DevicePlatform? get selectedPlatform {
   if (kIsWeb) return DevicePlatform.web;
-  if (defaultTargetPlatform == TargetPlatform.android)
+  if (defaultTargetPlatform == TargetPlatform.android) {
     return DevicePlatform.android;
+  }
   if (defaultTargetPlatform == TargetPlatform.iOS) return DevicePlatform.ios;
   return null;
 }
@@ -27,7 +28,7 @@ class PlatformIcons extends StatelessWidget {
       children: [
         for (final p in DevicePlatform.values) ...[
           _PlatformIcon(supported: supported, platform: p),
-          SizedBox(width: 8),
+          const SizedBox(width: 8),
         ]
       ],
     );
@@ -54,12 +55,12 @@ class _PlatformIcon extends StatelessWidget {
         color: isCurrent ? color : color.withOpacity(0.2),
         borderRadius: BorderRadius.circular(12),
       ),
+      padding: const EdgeInsets.all(8),
       child: Icon(
         platform.icon,
         size: 16,
         color: isCurrent ? Colors.white60 : color,
       ),
-      padding: EdgeInsets.all(8),
     );
   }
 }

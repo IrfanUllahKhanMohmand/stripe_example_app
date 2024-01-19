@@ -16,8 +16,10 @@ const _paymentItems = [
 ];
 
 class ApplePayExternalPluginScreen extends StatefulWidget {
+  const ApplePayExternalPluginScreen({super.key});
+
   @override
-  _ApplePayExternalPluginScreenState createState() =>
+  State<ApplePayExternalPluginScreen> createState() =>
       _ApplePayExternalPluginScreenState();
 }
 
@@ -41,8 +43,8 @@ class _ApplePayExternalPluginScreenState
   Widget build(BuildContext context) {
     return ExampleScaffold(
       title: 'Apple Pay',
-      padding: EdgeInsets.all(16),
-      tags: ['iOS', 'Pay plugin'],
+      padding: const EdgeInsets.all(16),
+      tags: const ['iOS', 'Pay plugin'],
       children: [
         pay.ApplePayButton(
           paymentConfiguration: pay.PaymentConfiguration.fromJsonString(
@@ -54,7 +56,7 @@ class _ApplePayExternalPluginScreenState
           loadingIndicator: const Center(
             child: CircularProgressIndicator(),
           ),
-          childOnError: Text('Apple Pay is not available in this device'),
+          childOnError: const Text('Apple Pay is not available in this device'),
           onError: (e) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
@@ -90,14 +92,18 @@ class _ApplePayExternalPluginScreenState
         data: params,
       );
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text('Apple Pay payment succesfully completed')),
-      );
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              content: Text('Apple Pay payment succesfully completed')),
+        );
+      }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: $e')),
-      );
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e')),
+        );
+      }
     }
   }
 
@@ -119,7 +125,7 @@ class _ApplePayExternalPluginScreenState
   }
 }
 
-final _paymentProfile = """{
+const _paymentProfile = """{
   "provider": "apple_pay",
   "data": {
     "merchantIdentifier": "merchant.flutter.stripe.test",

@@ -41,18 +41,20 @@ class CashAppScreen extends StatelessWidget {
     try {
       await Stripe.instance.confirmPayment(
         paymentIntentClientSecret: clientSecret,
-        data: PaymentMethodParams.cashAppPay(
+        data: const PaymentMethodParams.cashAppPay(
           paymentMethodData: PaymentMethodData(),
         ),
       );
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Payment succesfully completed'),
-        ),
-      );
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Payment succesfully completed'),
+          ),
+        );
+      }
     } on Exception catch (e) {
-      if (e is StripeException) {
+      if (e is StripeException && context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
@@ -60,11 +62,13 @@ class CashAppScreen extends StatelessWidget {
           ),
         );
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Unforeseen error: ${e}'),
-          ),
-        );
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Unforeseen error: $e'),
+            ),
+          );
+        }
       }
     }
   }
@@ -73,8 +77,8 @@ class CashAppScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ExampleScaffold(
       title: 'Cashapp',
-      tags: ['Payment method'],
-      padding: EdgeInsets.all(16),
+      tags: const ['Payment method'],
+      padding: const EdgeInsets.all(16),
       children: [
         LoadingButton(
           onPressed: () async {

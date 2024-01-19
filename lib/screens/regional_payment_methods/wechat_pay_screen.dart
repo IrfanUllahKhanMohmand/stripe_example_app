@@ -41,18 +41,18 @@ class WeChatPayScreen extends StatelessWidget {
 
       // 3. use the client secret to confirm the payment and handle the result.
 
-      // TODO: uncomment when wechat is enabled again
-
       // await Stripe.instance.confirmPayment(
       //   clientSecret,
       //   PaymentMethodParams.weChatPay(appId: 'com.flutter.stripe.example'),
       // );
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Payment succesfully completed'),
-        ),
-      );
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Payment succesfully completed'),
+          ),
+        );
+      }
     } on Exception catch (e) {
       if (e is StripeException) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -63,7 +63,7 @@ class WeChatPayScreen extends StatelessWidget {
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Unforeseen error: ${e}'),
+            content: Text('Unforeseen error: $e'),
           ),
         );
       }
@@ -74,8 +74,8 @@ class WeChatPayScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ExampleScaffold(
       title: 'WeChat Pay',
-      tags: ['Payment method'],
-      padding: EdgeInsets.all(16),
+      tags: const ['Payment method'],
+      padding: const EdgeInsets.all(16),
       children: [
         LoadingButton(
           onPressed: () async {

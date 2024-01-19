@@ -6,8 +6,10 @@ import 'package:stripe_example_app/widgets/loading_button.dart';
 import 'package:stripe_example_app/widgets/response_card.dart';
 
 class LegacyTokenBankScreen extends StatefulWidget {
+  const LegacyTokenBankScreen({super.key});
+
   @override
-  _LegacyTokenBankScreenState createState() => _LegacyTokenBankScreenState();
+  State<LegacyTokenBankScreen> createState() => _LegacyTokenBankScreenState();
 }
 
 class _LegacyTokenBankScreenState extends State<LegacyTokenBankScreen> {
@@ -30,22 +32,22 @@ class _LegacyTokenBankScreenState extends State<LegacyTokenBankScreen> {
   Widget build(BuildContext context) {
     return ExampleScaffold(
       title: 'Create token for bank',
-      tags: ['Legacy'],
-      padding: EdgeInsets.all(16),
+      tags: const ['Legacy'],
+      padding: const EdgeInsets.all(16),
       children: [
         TextField(
           controller: _controller,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             border: OutlineInputBorder(),
             labelText: 'Accountnumber',
           ),
         ),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         LoadingButton(
           onPressed: _handleCreateTokenPress,
           text: 'Create token',
         ),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         if (tokenData != null)
           ResponseCard(
             response: tokenData!.toJson().toPrettyString(),
@@ -71,12 +73,16 @@ class _LegacyTokenBankScreenState extends State<LegacyTokenBankScreen> {
       setState(() {
         this.tokenData = tokenData;
       });
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Success: The token was created successfully!')));
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text('Success: The token was created successfully!')));
+      }
       return;
     } catch (e) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Error: $e')));
+      if (context.mounted) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Error: $e')));
+      }
       rethrow;
     }
   }

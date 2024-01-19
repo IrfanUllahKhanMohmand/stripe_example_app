@@ -10,7 +10,7 @@ class LoadingButton extends StatefulWidget {
       : super(key: key);
 
   @override
-  _LoadingButtonState createState() => _LoadingButtonState();
+  State<LoadingButton> createState() => _LoadingButtonState();
 }
 
 class _LoadingButtonState extends State<LoadingButton> {
@@ -24,11 +24,11 @@ class _LoadingButtonState extends State<LoadingButton> {
         Expanded(
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(vertical: 12)),
+                padding: const EdgeInsets.symmetric(vertical: 12)),
             onPressed:
                 (_isLoading || widget.onPressed == null) ? null : _loadFuture,
             child: _isLoading
-                ? SizedBox(
+                ? const SizedBox(
                     height: 22,
                     width: 22,
                     child: CircularProgressIndicator(
@@ -50,8 +50,10 @@ class _LoadingButtonState extends State<LoadingButton> {
       await widget.onPressed!();
     } catch (e, s) {
       log(e.toString(), error: e, stackTrace: s);
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Error $e')));
+      if (context.mounted) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Error $e')));
+      }
       rethrow;
     } finally {
       setState(() {

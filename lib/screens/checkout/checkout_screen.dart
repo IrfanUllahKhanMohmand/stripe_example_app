@@ -13,12 +13,12 @@ import 'platforms/stripe_checkout.dart'
     if (dart.library.js) 'platforms/stripe_checkout_web.dart';
 
 class CheckoutScreenExample extends StatefulWidget {
-  CheckoutScreenExample({
+  const CheckoutScreenExample({
     Key? key,
   }) : super(key: key);
 
   @override
-  _CheckoutScreenExample createState() => _CheckoutScreenExample();
+  State<CheckoutScreenExample> createState() => _CheckoutScreenExample();
 }
 
 class _CheckoutScreenExample extends State<CheckoutScreenExample> {
@@ -41,24 +41,26 @@ class _CheckoutScreenExample extends State<CheckoutScreenExample> {
 
   Future<void> getCheckout() async {
     final String sessionId = await _createCheckoutSession();
-    final result = await redirectToCheckout(
-      context: context,
-      sessionId: sessionId,
-      publishableKey: stripePublishableKey,
-      successUrl: 'https://checkout.stripe.dev/success',
-      canceledUrl: 'https://checkout.stripe.dev/cancel',
-    );
+    if (context.mounted) {
+      final result = await redirectToCheckout(
+        context: context,
+        sessionId: sessionId,
+        publishableKey: stripePublishableKey,
+        successUrl: 'https://checkout.stripe.dev/success',
+        canceledUrl: 'https://checkout.stripe.dev/cancel',
+      );
 
-    if (mounted) {
-      final text = result.when(
-        success: () => 'Paid succesfully',
-        canceled: () => 'Checkout canceled',
-        error: (e) => 'Error $e',
-        redirected: () => 'Redirected succesfully',
-      );
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(text)),
-      );
+      if (mounted) {
+        final text = result.when(
+          success: () => 'Paid succesfully',
+          canceled: () => 'Checkout canceled',
+          error: (e) => 'Error $e',
+          redirected: () => 'Redirected succesfully',
+        );
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(text)),
+        );
+      }
     }
   }
 

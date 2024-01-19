@@ -12,7 +12,7 @@ Future<void> pay() async {
 }
 
 class PlatformPaymentElement extends StatelessWidget {
-  const PlatformPaymentElement(this.clientSecret);
+  const PlatformPaymentElement(this.clientSecret, {super.key});
 
   final String? clientSecret;
 

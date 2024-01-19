@@ -7,8 +7,10 @@ import 'package:stripe_example_app/config.dart';
 import 'package:stripe_example_app/widgets/loading_button.dart';
 
 class CustomCardPaymentScreen extends StatefulWidget {
+  const CustomCardPaymentScreen({super.key});
+
   @override
-  _CustomCardPaymentScreenState createState() =>
+  State<CustomCardPaymentScreen> createState() =>
       _CustomCardPaymentScreenState();
 }
 
@@ -25,26 +27,26 @@ class _CustomCardPaymentScreenState extends State<CustomCardPaymentScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Container(
-                margin: EdgeInsets.all(16),
-                padding: EdgeInsets.all(12),
+                margin: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: Colors.grey[200],
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: Text(
+                child: const Text(
                     'If you don\'t want to or can\'t rely on the CardField you'
                     ' can use the dangerouslyUpdateCardDetails in combination with '
                     'your own card field implementation. \n\n'
                     'Please beware that this will potentially break PCI compliance: '
                     'https://stripe.com/docs/security/guide#validating-pci-compliance')),
             Padding(
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               child: Row(
                 children: [
                   Expanded(
                     flex: 2,
                     child: TextField(
-                      decoration: InputDecoration(hintText: 'Number'),
+                      decoration: const InputDecoration(hintText: 'Number'),
                       onChanged: (number) {
                         setState(() {
                           _card = _card.copyWith(number: number);
@@ -57,7 +59,7 @@ class _CustomCardPaymentScreenState extends State<CustomCardPaymentScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 4),
                     width: 80,
                     child: TextField(
-                      decoration: InputDecoration(hintText: 'Exp. Year'),
+                      decoration: const InputDecoration(hintText: 'Exp. Year'),
                       onChanged: (number) {
                         setState(() {
                           _card = _card.copyWith(
@@ -71,7 +73,7 @@ class _CustomCardPaymentScreenState extends State<CustomCardPaymentScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 4),
                     width: 80,
                     child: TextField(
-                      decoration: InputDecoration(hintText: 'Exp. Month'),
+                      decoration: const InputDecoration(hintText: 'Exp. Month'),
                       onChanged: (number) {
                         setState(() {
                           _card = _card.copyWith(
@@ -85,7 +87,7 @@ class _CustomCardPaymentScreenState extends State<CustomCardPaymentScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 4),
                     width: 80,
                     child: TextField(
-                      decoration: InputDecoration(hintText: 'CVC'),
+                      decoration: const InputDecoration(hintText: 'CVC'),
                       onChanged: (number) {
                         setState(() {
                           _card = _card.copyWith(cvc: number);
@@ -104,10 +106,10 @@ class _CustomCardPaymentScreenState extends State<CustomCardPaymentScreen> {
                   _saveCard = value;
                 });
               },
-              title: Text('Save card during payment'),
+              title: const Text('Save card during payment'),
             ),
             Padding(
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               child: LoadingButton(
                 onPressed: _handlePayPress,
                 text: 'Pay',
@@ -125,7 +127,7 @@ class _CustomCardPaymentScreenState extends State<CustomCardPaymentScreen> {
     try {
       // 1. Gather customer billing information (ex. email)
 
-      final billingDetails = BillingDetails(
+      const billingDetails = BillingDetails(
         email: 'email@stripe.com',
         phone: '+48888000888',
         address: Address(
@@ -140,7 +142,7 @@ class _CustomCardPaymentScreenState extends State<CustomCardPaymentScreen> {
 
       // 2. Create payment method
       final paymentMethod = await Stripe.instance.createPaymentMethod(
-          params: PaymentMethodParams.card(
+          params: const PaymentMethodParams.card(
         paymentMethodData: PaymentMethodData(
           billingDetails: billingDetails,
         ),
@@ -156,7 +158,7 @@ class _CustomCardPaymentScreenState extends State<CustomCardPaymentScreen> {
         ],
       );
 
-      if (paymentIntentResult['error'] != null) {
+      if (paymentIntentResult['error'] != null && context.mounted) {
         // Error during creating or confirming Intent
         ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Error: ${paymentIntentResult['error']}')));
@@ -164,10 +166,11 @@ class _CustomCardPaymentScreenState extends State<CustomCardPaymentScreen> {
       }
 
       if (paymentIntentResult['clientSecret'] != null &&
-          paymentIntentResult['requiresAction'] == null) {
+          paymentIntentResult['requiresAction'] == null &&
+          context.mounted) {
         // Payment succedeed
 
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
             content:
                 Text('Success!: The payment was confirmed successfully!')));
         return;
@@ -184,13 +187,17 @@ class _CustomCardPaymentScreenState extends State<CustomCardPaymentScreen> {
           await confirmIntent(paymentIntent.id);
         } else {
           // Payment succedeed
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text('Error: ${paymentIntentResult['error']}')));
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text('Error: ${paymentIntentResult['error']}')));
+          }
         }
       }
     } catch (e) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Error: $e')));
+      if (context.mounted) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Error: $e')));
+      }
       rethrow;
     }
   }
@@ -198,12 +205,15 @@ class _CustomCardPaymentScreenState extends State<CustomCardPaymentScreen> {
   Future<void> confirmIntent(String paymentIntentId) async {
     final result = await callNoWebhookPayEndpointIntentId(
         paymentIntentId: paymentIntentId);
-    if (result['error'] != null) {
+    if (result['error'] != null && context.mounted) {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text('Error: ${result['error']}')));
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Success!: The payment was confirmed successfully!')));
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content:
+                Text('Success!: The payment was confirmed successfully!')));
+      }
     }
   }
 

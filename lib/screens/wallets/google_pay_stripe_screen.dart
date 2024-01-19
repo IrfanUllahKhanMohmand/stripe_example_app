@@ -12,13 +12,13 @@ class GooglePayStripeScreen extends StatefulWidget {
   const GooglePayStripeScreen({Key? key}) : super(key: key);
 
   @override
-  _GooglePayStripeScreenState createState() => _GooglePayStripeScreenState();
+  State<GooglePayStripeScreen> createState() => _GooglePayStripeScreenState();
 }
 
 class _GooglePayStripeScreenState extends State<GooglePayStripeScreen> {
   Future<void> startGooglePay() async {
     final googlePaySupported = await Stripe.instance
-        .isPlatformPaySupported(googlePay: IsGooglePaySupportedParams());
+        .isPlatformPaySupported(googlePay: const IsGooglePaySupportedParams());
     if (googlePaySupported) {
       try {
         // 1. fetch Intent Client Secret from backend
@@ -28,7 +28,7 @@ class _GooglePayStripeScreenState extends State<GooglePayStripeScreen> {
         // 2.present google pay sheet
         await Stripe.instance.confirmPlatformPayPaymentIntent(
             clientSecret: clientSecret,
-            confirmParams: PlatformPayConfirmParams.googlePay(
+            confirmParams: const PlatformPayConfirmParams.googlePay(
               googlePay: GooglePayParams(
                 testEnv: true,
                 merchantName: 'Example Merchant Name',
@@ -39,12 +39,14 @@ class _GooglePayStripeScreenState extends State<GooglePayStripeScreen> {
             // PresentGooglePayParams(clientSecret: clientSecret),
             );
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-              content: Text('Google Pay payment succesfully completed')),
-        );
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+                content: Text('Google Pay payment succesfully completed')),
+          );
+        }
       } catch (e) {
-        if (e is StripeException) {
+        if (e is StripeException && context.mounted) {
           log('Error during google pay',
               error: e.error, stackTrace: StackTrace.current);
           ScaffoldMessenger.of(context).showSnackBar(
@@ -53,15 +55,20 @@ class _GooglePayStripeScreenState extends State<GooglePayStripeScreen> {
         } else {
           log('Error during google pay',
               error: e, stackTrace: (e as Error?)?.stackTrace);
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Error: $e')),
-          );
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Error: $e')),
+            );
+          }
         }
       }
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Google pay is not supported on this device')),
-      );
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              content: Text('Google pay is not supported on this device')),
+        );
+      }
     }
   }
 
@@ -85,8 +92,8 @@ class _GooglePayStripeScreenState extends State<GooglePayStripeScreen> {
   Widget build(BuildContext context) {
     return ExampleScaffold(
       title: 'Google Pay',
-      tags: ['Android'],
-      padding: EdgeInsets.all(16),
+      tags: const ['Android'],
+      padding: const EdgeInsets.all(16),
       children: [
         if (defaultTargetPlatform == TargetPlatform.android)
           SizedBox(
@@ -99,7 +106,7 @@ class _GooglePayStripeScreenState extends State<GooglePayStripeScreen> {
             ),
           )
         else
-          Text('Google Pay is not available in this device'),
+          const Text('Google Pay is not available in this device'),
       ],
     );
   }

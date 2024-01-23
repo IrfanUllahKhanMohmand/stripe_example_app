@@ -42,4 +42,4 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
-lib/.evn.example.dart
+lib/.env.example.dart

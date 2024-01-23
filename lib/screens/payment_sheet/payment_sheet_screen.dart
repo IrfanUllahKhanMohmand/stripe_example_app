@@ -31,7 +31,10 @@ class _PaymentSheetScreenState extends State<PaymentSheetScreen> {
             Step(
               title: const Text('Init payment'),
               content: LoadingButton(
-                onPressed: initPaymentSheet,
+                onPressed: () => initPaymentSheet(
+                  amount: 1099,
+                  currency: 'usd',
+                ),
                 text: 'Init payment sheet',
               ),
             ),
@@ -48,7 +51,8 @@ class _PaymentSheetScreenState extends State<PaymentSheetScreen> {
     );
   }
 
-  Future<Map<String, dynamic>> _createTestPaymentSheet() async {
+  Future<Map<String, dynamic>> _createTestPaymentSheet(
+      {required int amount, required String currency}) async {
     final url = Uri.parse('$kApiUrl/payment-sheet');
     final response = await http.post(
       url,
@@ -56,7 +60,8 @@ class _PaymentSheetScreenState extends State<PaymentSheetScreen> {
         'Content-Type': 'application/json',
       },
       body: json.encode({
-        'a': 'a',
+        'amount': amount,
+        'currency': currency,
       }),
     );
     final body = json.decode(response.body);
@@ -66,10 +71,12 @@ class _PaymentSheetScreenState extends State<PaymentSheetScreen> {
     return body;
   }
 
-  Future<void> initPaymentSheet() async {
+  Future<void> initPaymentSheet(
+      {required int amount, required String currency}) async {
     try {
       // 1. create payment intent on the server
-      final data = await _createTestPaymentSheet();
+      final data =
+          await _createTestPaymentSheet(amount: amount, currency: currency);
 
       // create some billingdetails
       const billingDetails = BillingDetails(

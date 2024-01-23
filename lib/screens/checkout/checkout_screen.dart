@@ -76,7 +76,8 @@ class _CheckoutScreenExample extends State<CheckoutScreenExample> {
       }),
     );
     final Map<String, dynamic> bodyResponse = json.decode(response.body);
-    final id = bodyResponse['id'] as String;
+    print(bodyResponse);
+    final id = bodyResponse['sessionId'] as String;
     log('Checkout session id $id');
     return id;
   }

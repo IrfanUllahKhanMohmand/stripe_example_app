@@ -58,7 +58,10 @@ class _PaymentSheetScreenState extends State<PaymentSheetScreenWithCustomFlow> {
   Future<void> initPaymentSheet() async {
     try {
       // 1. create payment intent on the server
-      final data = await createTestPaymentSheet();
+      final data = await createTestPaymentSheet(
+        amount: 1099,
+        currency: 'eur',
+      );
 
       // 2. initialize the payment sheet
       await Stripe.instance.initPaymentSheet(
@@ -162,7 +165,8 @@ class _PaymentSheetScreenState extends State<PaymentSheetScreenWithCustomFlow> {
     }
   }
 
-  Future<Map<String, dynamic>> createTestPaymentSheet() async {
+  Future<Map<String, dynamic>> createTestPaymentSheet(
+      {required int amount, required String currency}) async {
     final url = Uri.parse('$kApiUrl/payment-sheet');
     final response = await http.post(
       url,
@@ -170,7 +174,8 @@ class _PaymentSheetScreenState extends State<PaymentSheetScreenWithCustomFlow> {
         'Content-Type': 'application/json',
       },
       body: json.encode({
-        'a': 'a',
+        'amount': amount,
+        'currency': currency,
       }),
     );
     final body = json.decode(response.body);

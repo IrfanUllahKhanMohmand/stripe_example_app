@@ -1,1 +1,0 @@
-const stripePublishableKey =  "pk_test_51NcoVuAcd6N7OZokEu7sb9epQ2OYQPkWPbZy4NeZgObByNEV4tKhyWzOjnt9rCyvK01Y3hdiqcuevLqNymfUdXO200wKYseb9V";

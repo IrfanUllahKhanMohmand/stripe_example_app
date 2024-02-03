@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:stripe_example_app/screens/checkout/checkout_screen.dart';
+import 'package:stripe_example_app/screens/customer_sheet/create_payment_method_screen.dart';
 import 'package:stripe_example_app/screens/customer_sheet/customer_sheet_screen.dart';
+import 'package:stripe_example_app/screens/payment_sheet/list_payment_methods.dart';
 import 'package:stripe_example_app/screens/payment_sheet/payment_element/payment_element.dart';
 import 'package:stripe_example_app/screens/payment_sheet/payment_sheet_deffered_screen.dart';
 import 'package:stripe_example_app/screens/payment_sheet/payment_sheet_screen.dart';
@@ -138,6 +140,16 @@ class Example extends StatelessWidget {
       Example(
         title: 'Customer sheet',
         builder: (context) => const CustomerSheetScreen(),
+        platformsSupported: const [DevicePlatform.android, DevicePlatform.ios],
+      ),
+      Example(
+        title: 'Create payment method',
+        builder: (context) => const CreatePaymentMethodScreen(),
+        platformsSupported: const [DevicePlatform.android, DevicePlatform.ios],
+      ),
+      Example(
+        title: 'List out payment intents',
+        builder: (context) => const PaymentMethodsList(),
         platformsSupported: const [DevicePlatform.android, DevicePlatform.ios],
       ),
     ]),

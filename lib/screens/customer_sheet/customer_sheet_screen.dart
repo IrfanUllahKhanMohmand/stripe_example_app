@@ -28,19 +28,19 @@ class _CustomerSheetScreenState extends State<CustomerSheetScreen> {
           currentStep: step,
           steps: [
             Step(
-              title: const Text('Init customer sheet'),
+              title: const Text('Customer sheet'),
               content: LoadingButton(
                 onPressed: initCustomerSheet,
                 text: 'Init customer sheet',
               ),
             ),
-            Step(
-              title: const Text('Confirm customer sheet'),
-              content: LoadingButton(
-                onPressed: confirmCustomerSheet,
-                text: 'Select payment method now',
-              ),
-            ),
+            // Step(
+            //   title: const Text('Confirm customer sheet'),
+            //   content: LoadingButton(
+            //     onPressed: confirmCustomerSheet,
+            //     text: 'Select payment method now',
+            //   ),
+            // ),
           ],
         ),
       ],
@@ -98,9 +98,10 @@ class _CustomerSheetScreenState extends State<CustomerSheetScreen> {
           defaultBillingDetails: billingDetails,
         ),
       );
-      setState(() {
-        step = 1;
-      });
+      await confirmCustomerSheet();
+      // setState(() {
+      //   step = 1;
+      // });
     } catch (e) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -120,11 +121,11 @@ class _CustomerSheetScreenState extends State<CustomerSheetScreen> {
         step = 0;
       });
 
-      if (context.mounted) {
+      if (context.mounted && result != null) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-                'Payment preferences modfied completed option selected: ${result?.paymentOption?.label}}'),
+                'Payment preferences modfied completed option selected: ${result.paymentOption?.label}}'),
           ),
         );
       }

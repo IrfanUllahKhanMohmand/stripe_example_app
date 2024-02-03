@@ -226,6 +226,7 @@ class _SetupFuturePaymentScreenState extends State<SetupFuturePaymentScreen> {
       },
       body: json.encode({
         'email': email,
+        'payment_method_types': ['card'],
       }),
     );
     final Map<String, dynamic> bodyResponse = json.decode(response.body);

@@ -12,7 +12,7 @@ class ApplePayCreatePaymentMethodScreen extends StatefulWidget {
 }
 
 class _ApplePayScreenState extends State<ApplePayCreatePaymentMethodScreen> {
-  PaymentMethod? response;
+  PlatformPayPaymentMethod? response;
   @override
   void initState() {
     Stripe.instance.isPlatformPaySupportedListenable.addListener(update);
@@ -92,7 +92,7 @@ class _ApplePayScreenState extends State<ApplePayCreatePaymentMethodScreen> {
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(
-              'Success!: The payment method with id: ${paymentMethod.id} was created successfully,')));
+              'Success!: The payment method with id: ${paymentMethod.paymentMethod.id} was created successfully,')));
     }
   }
 }

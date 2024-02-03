@@ -34,13 +34,13 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
-  flutter_stripe: ^9.4.0
-  flutter_stripe_web: ^4.4.0
-  stripe_checkout: ^1.0.1
-  pay: ^1.1.0
-  http: ^1.1.0
-  font_awesome_flutter: ^10.6.0
-  platform: ^3.0.0
+  flutter_stripe: ^10.0.0
+  flutter_stripe_web: ^5.0.0
+  stripe_checkout: ^1.0.2
+  pay: ^1.1.2
+  http: ^1.2.0
+  font_awesome_flutter: ^10.7.0
+  platform: ^3.1.4
 
 dev_dependencies:
   flutter_test:

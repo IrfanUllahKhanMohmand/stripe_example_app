@@ -62,6 +62,7 @@ class _PaymentSheetScreenState extends State<PaymentSheetScreen> {
       body: json.encode({
         'amount': amount,
         'currency': currency,
+        'email': 'example1@gmail.com'
       }),
     );
     final body = json.decode(response.body);
